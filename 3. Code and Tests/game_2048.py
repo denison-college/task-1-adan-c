@@ -10,36 +10,44 @@ def choose_difficulty():
 def create_grid(size):
     return [[0] * size for _ in range(size)]
 
+def main_menu():
 
-print("=== 2048 ===")
-print("1. Play Game")
-print("2. Instructions")
+    print("=== 2048 ===")
+    print("1. Play Game")
+    print("2. Instructions")
 
-choice = input("Choose an option: ")
+    choice = input("Choose an option: ")
 
-if choice == "1":
-    choose_difficulty()
-    diff = input("Select difficulty: ")
+    if choice == "1":
+        choose_difficulty()
+        diff = input("Select difficulty: ")
 
-    if diff == "1":
-        print("Easy mode selected")
-        grid = create_grid(6)
-    elif diff == "2":
-        print("Medium mode selected")
-        grid = create_grid(5)
-    elif diff == "3":
-        print("Hard mode selected")
-        grid = create_grid(4)
+        if diff == "1":
+            print("Easy mode selected")
+            grid = create_grid(6)
+        elif diff == "2":
+            print("Medium mode selected")
+            grid = create_grid(5)
+        elif diff == "3":
+            print("Hard mode selected")
+            grid = create_grid(4)
+        else:
+            print("Invalid difficulty")
+            grid = None
+
+        if grid:
+            for row in grid:
+                print(row)
+
+    elif choice == "2":
+        display_intructions()
+
     else:
-        print("Invalid difficulty")
-        grid = None
+        print("Invalid choice.")
 
-    if grid:
-        for row in grid:
-            print(row)
 
-elif choice == "2":
-    display_intructions()
 
-else:
-    print("Invalid choice.")
+
+# The entry point of the script
+if __name__ == "__main__":
+    main_menu()
