@@ -1,5 +1,7 @@
 def display_intructions():
     print("Use W/A/S/D to move tiles and combine numbers to reach 2048!")
+    input("\nPress Enter to return to the menu...")
+    main_menu()   
 
 def choose_difficulty():
     print("Choose difficulty:")
@@ -41,6 +43,7 @@ def main_menu():
 
     elif choice == "2":
         display_intructions()
+                
 
     else:
         print("Invalid choice.")
