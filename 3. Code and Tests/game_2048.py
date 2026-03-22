@@ -3,7 +3,6 @@ import random
 # INSTRUCTIONS
 def display_intructions():
     print("Use W/A/S/D to move tiles and combine numbers to reach 2048!")
-    print("This version is kept very simple for beginners.")
     input("\nPress Enter to return to the menu...")
 
 # DIFFICULTY SELECTION
@@ -13,18 +12,17 @@ def choose_difficulty():
     print("2. Medium (5x5)")
     print("3. Hard (4x4)")
 
-
 def create_grid(size):
     return [[0] * size for _ in range(size)]
 
-# SIMPLE 2048 GAME (WSAD + SCORE)
-
+# DISPLAY BOARD
 def show(board, score):
     print("Score:", score)
     for row in board:
         print(" ".join(f"{n:4}" for n in row))
     print()
 
+# ADD NEW TILE
 def add(board):
     size = len(board)
     while True:
@@ -34,8 +32,8 @@ def add(board):
             board[r][c] = 2
             break
 
+# MERGE LEFT
 def merge_left(row):
-    """Merge a single row to the left and return score gained."""
     row = [n for n in row if n != 0]
     score_gain = 0
     i = 0
@@ -48,38 +46,42 @@ def merge_left(row):
     row += [0] * (len_size - len(row))
     return row, score_gain
 
+# ROTATE CLOCKWISE
 def rotate(board):
-    """Rotate board clockwise."""
     return [list(row) for row in zip(*board[::-1])]
 
+# MOVE FUNCTION (FIXED UP/DOWN)
 def move(board, direction):
-    """Move in any direction using rotation."""
     global len_size
     size = len(board)
     len_size = size
 
     score_gain = 0
 
+    # FIXED ROTATION LOGIC
     if direction == "up":
-        board = rotate(board)
+        board = rotate(rotate(rotate(board)))  # rotate CCW
     elif direction == "right":
         board = rotate(rotate(board))
     elif direction == "down":
-        board = rotate(rotate(rotate(board)))
+        board = rotate(board)  # rotate CW
 
+    # Merge left
     for r in range(size):
         board[r], gain = merge_left(board[r])
         score_gain += gain
 
+    # Rotate back
     if direction == "up":
-        board = rotate(rotate(rotate(board)))
+        board = rotate(board)
     elif direction == "right":
         board = rotate(rotate(board))
     elif direction == "down":
-        board = rotate(board)
+        board = rotate(rotate(rotate(board)))
 
     return board, score_gain
 
+# GAME LOOP
 def play_game(board):
     score = 0
 
@@ -111,7 +113,6 @@ def play_game(board):
 
 # MAIN MENU
 def main_menu():
-
     print("=== 2048 ===")
     print("1. Play Game")
     print("2. Instructions")
@@ -125,15 +126,12 @@ def main_menu():
         if diff == "1":
             print("Easy mode selected")
             grid = create_grid(6)
-
         elif diff == "2":
             print("Medium mode selected")
             grid = create_grid(5)
-
         elif diff == "3":
             print("Hard mode selected")
             grid = create_grid(4)
-
         else:
             print("Invalid difficulty")
             grid = None
