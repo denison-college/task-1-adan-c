@@ -18,7 +18,7 @@ def test_create_grid():
     assert all(cell == 0 for row in grid for cell in row)
 
 
-def test_display_intructions(monkeypatch, capsys):
+def test_display_instructions(monkeypatch, capsys):
     monkeypatch.setattr(game_2048, "main_menu", lambda: None)
 
     monkeypatch.setattr("builtins.input", lambda _: "")

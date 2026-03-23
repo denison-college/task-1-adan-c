@@ -1,7 +1,7 @@
 import random
 
 # INSTRUCTIONS
-def display_intructions():
+def display_instructions():
     print("Use W/A/S/D to move tiles and combine numbers to reach 2048!")
     input("\nPress Enter to return to the menu...")
 
@@ -12,6 +12,22 @@ def choose_difficulty():
     print("2. Medium (5x5)")
     print("3. Hard (4x4)")
 
+    choice = input("Select difficulty: ")
+
+    if choice == "1":
+        print("Easy mode selected")
+        return 6
+    elif choice == "2":
+        print("Medium mode selected")
+        return 5
+    elif choice == "3":
+        print("Hard mode selected")
+        return 4
+    else:
+        print("Invalid difficulty")
+        return None
+
+# CREATE GRID
 def create_grid(size):
     return [[0] * size for _ in range(size)]
 
@@ -25,49 +41,59 @@ def show(board, score):
 # ADD NEW TILE
 def add(board):
     size = len(board)
-    while True:
-        r = random.randint(0, size - 1)
-        c = random.randint(0, size - 1)
-        if board[r][c] == 0:
-            board[r][c] = 2
-            break
+    empty = [(r, c) for r in range(size) for c in range(size) if board[r][c] == 0]
+    if empty:
+        r, c = random.choice(empty)
+        board[r][c] = 2
 
 # MERGE LEFT
 def merge_left(row):
     row = [n for n in row if n != 0]
     score_gain = 0
     i = 0
+
     while i < len(row) - 1:
-        if row[i] == row[i+1]:
+        if row[i] == row[i + 1]:
             row[i] *= 2
             score_gain += row[i]
-            del row[i+1]
+            del row[i + 1]
         i += 1
-    row += [0] * (len_size - len(row))
+
+    row += [0] * (4 - len(row)) 
+    return row, score_gain
+
+def merge_left(row):
+    size = len(row)
+    row = [n for n in row if n != 0]
+    score_gain = 0
+    i = 0
+
+    while i < len(row) - 1:
+        if row[i] == row[i + 1]:
+            row[i] *= 2
+            score_gain += row[i]
+            del row[i + 1]
+        i += 1
+
+    row += [0] * (size - len(row))
     return row, score_gain
 
 # ROTATE CLOCKWISE
 def rotate(board):
     return [list(row) for row in zip(*board[::-1])]
 
-# MOVE FUNCTION (FIXED UP/DOWN)
 def move(board, direction):
-    global len_size
-    size = len(board)
-    len_size = size
-
     score_gain = 0
 
-    # FIXED ROTATION LOGIC
     if direction == "up":
-        board = rotate(rotate(rotate(board)))  # rotate CCW
+        board = rotate(rotate(rotate(board)))
     elif direction == "right":
         board = rotate(rotate(board))
     elif direction == "down":
-        board = rotate(board)  # rotate CW
+        board = rotate(board)
 
     # Merge left
-    for r in range(size):
+    for r in range(len(board)):
         board[r], gain = merge_left(board[r])
         score_gain += gain
 
@@ -120,27 +146,12 @@ def main_menu():
     choice = input("Choose an option: ")
 
     if choice == "1":
-        choose_difficulty()
-        diff = input("Select difficulty: ")
-
-        if diff == "1":
-            print("Easy mode selected")
-            grid = create_grid(6)
-        elif diff == "2":
-            print("Medium mode selected")
-            grid = create_grid(5)
-        elif diff == "3":
-            print("Hard mode selected")
-            grid = create_grid(4)
-        else:
-            print("Invalid difficulty")
-            grid = None
-
-        if grid:
-            play_game(grid)
+        size = choose_difficulty()
+        if size:
+            play_game(create_grid(size))
 
     elif choice == "2":
-        display_intructions()
+        display_instructions()
         main_menu()
 
     else:
