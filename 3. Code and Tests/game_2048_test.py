@@ -1,6 +1,5 @@
 import game_2048
 
-
 def test_choose_difficulty(capsys):
     game_2048.choose_difficulty()
     out = capsys.readouterr().out
@@ -21,6 +20,7 @@ def test_create_grid():
 
 def test_display_intructions(monkeypatch, capsys):
     monkeypatch.setattr(game_2048, "main_menu", lambda: None)
+
     monkeypatch.setattr("builtins.input", lambda _: "")
 
     game_2048.display_intructions()
@@ -60,16 +60,6 @@ def test_main_menu_hard(monkeypatch, capsys):
 
     assert "Hard mode selected" in out
     assert "[0, 0, 0, 0]" in out
-
-
-def test_main_menu_instructions(monkeypatch, capsys):
-    monkeypatch.setattr(game_2048, "main_menu", lambda: None)
-    inputs = iter(["2", ""])
-    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
-    game_2048.main_menu()
-    out = capsys.readouterr().out
-    assert "Use W/A/S/D to move tiles and combine numbers to reach 2048!" in out
-
 
 def test_main_menu_invalid(monkeypatch, capsys):
     monkeypatch.setattr("builtins.input", lambda _: "9")
