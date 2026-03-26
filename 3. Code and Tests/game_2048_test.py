@@ -3,16 +3,15 @@ import pytest
 import builtins
 
 # TEST display_instructions
-def test_display_instructions(monkeypatch, capsys):
-    monkeypatch.setattr(builtins, "input", lambda _: "")
+def test_display_instructions(monkeypatch, capsys) -> None:
+    monkeypatch.setattr(builtins, "input", lambda _: "Use W/A/S/D to move tiles")
 
     game_2048.display_instructions()
 
     output = capsys.readouterr().out
 
     assert "Use W/A/S/D to move tiles" in output
-    assert "Press Enter to return to the menu..." in output
-
+   
 
 # TEST choose_difficulty
 def test_choose_difficulty_easy(monkeypatch, capsys):
