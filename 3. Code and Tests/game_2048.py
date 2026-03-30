@@ -48,21 +48,6 @@ def add(board):
 
 # MERGE LEFT
 def merge_left(row):
-    row = [n for n in row if n != 0]
-    score_gain = 0
-    i = 0
-
-    while i < len(row) - 1:
-        if row[i] == row[i + 1]:
-            row[i] *= 2
-            score_gain += row[i]
-            del row[i + 1]
-        i += 1
-
-    row += [0] * (4 - len(row)) 
-    return row, score_gain
-
-def merge_left(row):
     size = len(row)
     row = [n for n in row if n != 0]
     score_gain = 0

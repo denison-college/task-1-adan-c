@@ -1,9 +1,10 @@
+from pytest import CaptureFixture, MonkeyPatch
+
 import game_2048
-import pytest
 import builtins
 
 # TEST display_instructions
-def test_display_instructions(monkeypatch, capsys) -> None:
+def test_display_instructions(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]) -> None:
     monkeypatch.setattr(builtins, "input", lambda _: "Use W/A/S/D to move tiles")
 
     game_2048.display_instructions()
@@ -14,7 +15,7 @@ def test_display_instructions(monkeypatch, capsys) -> None:
    
 
 # TEST choose_difficulty
-def test_choose_difficulty_easy(monkeypatch, capsys):
+def test_choose_difficulty_easy(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]):
     monkeypatch.setattr(builtins, "input", lambda _: "1")
     result = game_2048.choose_difficulty()
     output = capsys.readouterr().out
@@ -23,7 +24,7 @@ def test_choose_difficulty_easy(monkeypatch, capsys):
     assert result == 6
 
 
-def test_choose_difficulty_medium(monkeypatch, capsys):
+def test_choose_difficulty_medium(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]):
     monkeypatch.setattr(builtins, "input", lambda _: "2")
     result = game_2048.choose_difficulty()
     output = capsys.readouterr().out
@@ -32,7 +33,7 @@ def test_choose_difficulty_medium(monkeypatch, capsys):
     assert result == 5
 
 
-def test_choose_difficulty_hard(monkeypatch, capsys):
+def test_choose_difficulty_hard(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]):
     monkeypatch.setattr(builtins, "input", lambda _: "3")
     result = game_2048.choose_difficulty()
     output = capsys.readouterr().out
@@ -41,7 +42,7 @@ def test_choose_difficulty_hard(monkeypatch, capsys):
     assert result == 4
 
 
-def test_choose_difficulty_invalid(monkeypatch, capsys):
+def test_choose_difficulty_invalid(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]):
     monkeypatch.setattr(builtins, "input", lambda _: "x")
     result = game_2048.choose_difficulty()
     output = capsys.readouterr().out
