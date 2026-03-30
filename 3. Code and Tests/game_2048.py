@@ -143,5 +143,8 @@ def main_menu():
         print("Invalid choice.")
 
 # START PROGRAM
-if __name__ == "__main__":
+def start_main_menu(main_menu):
     main_menu()
+
+if __name__ == "__main__":
+    start_main_menu(main_menu)

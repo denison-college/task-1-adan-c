@@ -49,3 +49,39 @@ def test_choose_difficulty_invalid(monkeypatch: MonkeyPatch, capsys: CaptureFixt
 
     assert "Invalid difficulty" in output
     assert result is None
+
+def test_create_grid_size():
+    size = 4
+    grid = game_2048.create_grid(size)
+    assert len(grid) == size
+    assert all(len(row) == size for row in grid)
+
+
+def test_create_grid_initial_values():
+    size = 3
+    grid = game_2048.create_grid(size)
+    for row in grid:
+        assert all(cell == 0 for cell in row)
+
+
+def test_show_output(capsys: CaptureFixture[builtins.str]):
+    board = [
+        [0, 2, 4],
+        [8, 16, 32],
+        [64, 128, 256]
+    ]
+    score = 100
+
+    game_2048.show(board, score)
+    captured = capsys.readouterr().out
+
+    expected_lines = [
+        "Score: 100",
+        "   0    2    4",
+        "   8   16   32",
+        "  64  128  256",
+        ""
+    ]
+
+    for line in expected_lines:
+        assert line in captured
