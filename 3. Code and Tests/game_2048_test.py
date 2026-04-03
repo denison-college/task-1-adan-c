@@ -1,70 +1,87 @@
+from pytest import CaptureFixture, MonkeyPatch
+
 import game_2048
+import builtins
 
-def test_choose_difficulty(capsys):
-    game_2048.choose_difficulty()
-    out = capsys.readouterr().out
+# TEST display_instructions
+def test_display_instructions(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]) -> None:
+    monkeypatch.setattr(builtins, "input", lambda _: "Use W/A/S/D to move tiles")
 
-    assert "Choose difficulty:" in out
-    assert "1. Easy (6x6)" in out
-    assert "2. Medium (5x5)" in out
-    assert "3. Hard (4x4)" in out
+    game_2048.display_instructions()
 
+    output = capsys.readouterr().out
 
-def test_create_grid():
-    grid = game_2048.create_grid(4)
+    assert "Use W/A/S/D to move tiles" in output
+   
 
-    assert len(grid) == 4
-    assert all(len(row) == 4 for row in grid)
-    assert all(cell == 0 for row in grid for cell in row)
+# TEST choose_difficulty
+def test_choose_difficulty_easy(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]):
+    monkeypatch.setattr(builtins, "input", lambda _: "1")
+    result = game_2048.choose_difficulty()
+    output = capsys.readouterr().out
 
-
-def test_display_intructions(monkeypatch, capsys):
-    monkeypatch.setattr(game_2048, "main_menu", lambda: None)
-
-    monkeypatch.setattr("builtins.input", lambda _: "")
-
-    game_2048.display_intructions()
-    out = capsys.readouterr().out
-
-    assert "Use W/A/S/D to move tiles and combine numbers to reach 2048!" in out
+    assert "Easy" in output
+    assert result == 6
 
 
-def test_main_menu_easy(monkeypatch, capsys):
-    inputs = iter(["1", "1"])
-    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+def test_choose_difficulty_medium(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]):
+    monkeypatch.setattr(builtins, "input", lambda _: "2")
+    result = game_2048.choose_difficulty()
+    output = capsys.readouterr().out
 
-    game_2048.main_menu()
-    out = capsys.readouterr().out
-
-    assert "Easy mode selected" in out
-    assert "[0, 0, 0, 0, 0, 0]" in out
+    assert "Medium" in output
+    assert result == 5
 
 
-def test_main_menu_medium(monkeypatch, capsys):
-    inputs = iter(["1", "2"])
-    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+def test_choose_difficulty_hard(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]):
+    monkeypatch.setattr(builtins, "input", lambda _: "3")
+    result = game_2048.choose_difficulty()
+    output = capsys.readouterr().out
 
-    game_2048.main_menu()
-    out = capsys.readouterr().out
-
-    assert "Medium mode selected" in out
-    assert "[0, 0, 0, 0, 0]" in out
+    assert "Hard" in output
+    assert result == 4
 
 
-def test_main_menu_hard(monkeypatch, capsys):
-    inputs = iter(["1", "3"])
-    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+def test_choose_difficulty_invalid(monkeypatch: MonkeyPatch, capsys: CaptureFixture[str]):
+    monkeypatch.setattr(builtins, "input", lambda _: "x")
+    result = game_2048.choose_difficulty()
+    output = capsys.readouterr().out
 
-    game_2048.main_menu()
-    out = capsys.readouterr().out
+    assert "Invalid difficulty" in output
+    assert result is None
 
-    assert "Hard mode selected" in out
-    assert "[0, 0, 0, 0]" in out
+def test_create_grid_size():
+    size = 4
+    grid = game_2048.create_grid(size)
+    assert len(grid) == size
+    assert all(len(row) == size for row in grid)
 
-def test_main_menu_invalid(monkeypatch, capsys):
-    monkeypatch.setattr("builtins.input", lambda _: "9")
 
-    game_2048.main_menu()
-    out = capsys.readouterr().out
+def test_create_grid_initial_values():
+    size = 3
+    grid = game_2048.create_grid(size)
+    for row in grid:
+        assert all(cell == 0 for cell in row)
 
-    assert "Invalid choice." in out
+
+def test_show_output(capsys: CaptureFixture[builtins.str]):
+    board = [
+        [0, 2, 4],
+        [8, 16, 32],
+        [64, 128, 256]
+    ]
+    score = 100
+
+    game_2048.show(board, score)
+    captured = capsys.readouterr().out
+
+    expected_lines = [
+        "Score: 100",
+        "   0    2    4",
+        "   8   16   32",
+        "  64  128  256",
+        ""
+    ]
+
+    for line in expected_lines:
+        assert line in captured
