@@ -102,17 +102,15 @@ def test_merge_left_no_merge():
     assert row == [2, 4, 8, 16]
     assert score == 0
     
-    # -----------------------------
-# move tests
-# -----------------------------
 
+# move tests
 def test_move_left():
     board = [
         [2, 2, 0, 0],
         [4, 0, 4, 0],
         [2, 2, 2, 2],
         [0, 0, 0, 0]
-            ]
+    ]     
     new_board, score = game_2048.move(board, "left")
 
     assert new_board == [
