@@ -4,7 +4,7 @@ import random
 highscores = {
     6: 0,   # Easy
     5: 0,   # Medium
-    4: 0    # 
+    4: 0    # hard
 }
 
 #   INSTRUCTIONS

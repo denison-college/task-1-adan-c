@@ -85,3 +85,70 @@ def test_show_output(capsys: CaptureFixture[builtins.str]):
 
     for line in expected_lines:
         assert line in captured
+        
+# merge_left tests
+def test_merge_left_simple():
+    row, score = game_2048.merge_left([2, 2, 0, 0])
+    assert row == game_2048.merge_left([4, 0, 0, 0])
+    assert score == 4
+
+def test_merge_left_double_merge():
+    row, score = game_2048.merge_left([2, 2, 4, 4])
+    assert row == [4, 8, 0, 0]
+    assert score == 12
+
+def test_merge_left_no_merge():
+    row, score = game_2048.merge_left([2, 4, 8, 16])
+    assert row == [2, 4, 8, 16]
+    assert score == 0
+    
+    # -----------------------------
+# move tests
+# -----------------------------
+
+def test_move_left():
+    board = [
+        [2, 2, 0, 0],
+        [4, 0, 4, 0],
+        [2, 2, 2, 2],
+        [0, 0, 0, 0]
+            ]
+    new_board, score = game_2048.move(board, "left")
+
+    assert new_board == [
+        [4, 0, 0, 0],
+        [8, 0, 0, 0],
+        [4, 4, 0, 0],
+        [0, 0, 0, 0]
+    ]
+    assert score == (4 + 8 + 4)
+
+def test_move_right():
+    board = [
+        [2, 2, 0, 0],
+        [4, 0, 4, 0]
+    ]
+    new_board, score = game_2048.move(board, "right")
+
+    assert new_board == [
+        [0, 0, 0, 4],
+        [0, 0, 0, 8]
+    ]
+    assert score == (4 + 8)
+
+# moves_available tests
+def test_moves_available_true():
+    board = [
+        [2, 4, 8],
+        [16, 32, 64],
+        [128, 128, 256]
+    ]
+    assert game_2048.moves_available(board) is True
+game_2048.moves_available
+def test_moves_available_false():
+    board = [
+        [2, 4, 8],
+        [16, 32, 64],
+        [128, 256, 512]
+    ]
+    assert game_2048.moves_available(board) is False
