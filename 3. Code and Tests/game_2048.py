@@ -12,7 +12,7 @@ def display_instructions():
     print("Use W/A/S/D to move tiles and combine numbers to reach 2048!")
     input("\nPress Enter to return to the menu...")
 
-#   DISPLAY HIGHSCORES  # NEW
+#   DISPLAY HIGHSCORES  # 
 def display_highscores():
     print("\n=== HIGHSCORES ===")
     print(f"Easy (6x6):   {highscores[6]}")
