@@ -193,3 +193,146 @@ def test_add_no_empty_spaces():
     game_2048.add(board)
 
     assert board == before
+    
+# testing merge_left()
+def test_merge_left_basic():
+    row, gain = game_2048.merge_left([2, 2, 0, 0])
+    assert row == [4, 0, 0, 0]
+    assert gain == 4
+
+def test_merge_left_multiple():
+    row, gain = game_2048.merge_left([2, 2, 4, 4])
+    assert row == [4, 8, 0, 0]
+    assert gain == 12
+
+def test_merge_left_no_merge():
+    row, gain = game_2048.merge_left([2, 4, 8, 16])
+    assert row == [2, 4, 8, 16]
+    assert gain == 0
+
+# testing rotate()
+def test_rotate_3x3():
+    board = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+    assert game_2048.rotate(board) == [
+        [7, 4, 1],
+        [8, 5, 2],
+        [9, 6, 3]
+    ]
+
+# testing move()
+def test_move_left():
+    board = [
+        [2, 2, 4, 0],
+        [0, 4, 4, 4],
+        [2, 0, 2, 2],
+        [0, 0, 0, 2]
+    ]
+    new_board, gain = game_2048.move(board, "left")
+    assert new_board == [
+        [4, 4, 0, 0],
+        [8, 4, 0, 0],
+        [4, 2, 0, 0],
+        [2, 0, 0, 0]
+    ]
+    assert gain == 16
+
+def test_move_right():
+    board = [[2, 2, 4, 0]]
+    new_board, gain = game_2048.move(board, "right")
+    assert new_board == [[0, 0, 4, 4]]
+    assert gain == 4
+
+def test_move_up():
+    board = [
+        [2, 0, 2],
+        [2, 2, 2],
+        [0, 2, 0]
+    ]
+    new_board, gain = game_2048.move(board, "up")
+    assert new_board == [
+        [4, 4, 4],
+        [0, 0, 0],
+        [0, 0, 0]
+    ]
+    assert gain == 12
+
+def test_move_down():
+    board = [
+        [2, 0, 2],
+        [2, 2, 2],
+        [0, 2, 0]
+    ]
+    new_board, gain = game_2048.move(board, "down")
+    assert new_board == [
+        [0, 0, 0],
+        [0, 0, 0],
+        [4, 4, 4]
+    ]
+    assert gain == 12
+
+# testing moves_available()
+def test_moves_available_empty():
+    board = [
+        [2, 4, 8],
+        [16, 0, 32],
+        [64, 128, 256]
+    ]
+    assert game_2048.moves_available(board)
+
+def test_moves_available_merge():
+    board = [
+        [2, 2, 4],
+        [8, 16, 32],
+        [64, 128, 256]
+    ]
+    assert game_2048.moves_available(board)
+    
+def test_moves_available_none():
+    board = [
+        [2, 4, 8],
+        [16, 32, 64],
+        [128, 256, 512]
+    ]
+    assert not game_2048.moves_available(board)
+
+# testing add()
+def test_add_places_tile(monkeypatch):
+    board = [
+        [0, 2],
+        [4, 0]
+    ]
+    monkeypatch.setattr(random, "choice", lambda x: (0, 0))
+    game_2048.add(board)
+    assert board[0][0] == 2
+
+def test_add_no_empty():
+    board = [
+        [2, 4],
+        [8, 16]
+    ]
+    before = [row[:] for row in board]
+    game_2048.add(board)
+    assert board == before
+
+# testing show()
+def test_show_output(capsys):
+    board = [
+        [2, 4],
+        [8, 16]
+    ]
+    game_2048.show(board, 100)
+    output = capsys.readouterr().out
+    assert "Score: 100" in output
+    assert "   2    4" in output
+    assert "   8   16" in output
+
+# testing start_main_menu()
+def test_start_main_menu(monkeypatch):
+    calls = []
+    monkeypatch.setattr("game_2048.main_menu", lambda: calls.append("called"))
+    game_2048.start_main_menu(game_2048.main_menu)
+    assert calls == ["called"]
